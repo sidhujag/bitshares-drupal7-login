@@ -24,7 +24,6 @@ function socialloginandsocialshare_admin_settings($form, &$form_state) {
     jQuery("#edit-thanks-block").css({"background-color":"#FFFFE0"});
    });', array('type' => 'inline', 'scope' => 'header', 'weight' => 5));
   $get_socialloginandsocialshare = '';
-
   if (!variable_get('socialloginandsocialshare_apikey', FALSE)) {
     $get_socialloginandsocialshare = t('For creating a Social Login account, please visit <a href="@get_socialloginandsocialshare" target="_blank">LoginRadius</a>', array('@get_socialloginandsocialshare' => 'http://ish.re/4'));
   }
@@ -59,8 +58,26 @@ function socialloginandsocialshare_admin_settings($form, &$form_state) {
   ));
   $form['thanks_block'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Thank you for installing the LoginRadius module for Social Login and Social Share!'),
+    '#title' => t('Thank you for installing the LoginRadius module for Social Login and Social Share (Crypto-Currency enabled)!'),
     '#description' => $thanks_text,
+  );
+  //cryptocurrency section
+  $crypto_group = 'Crypto-Currency settings';
+  $form[$crypto_group] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Crypto-Currency Settings'),
+    '#id' => 'crypto',
+    '#collapsible' => TRUE,
+    '#description' => t('For creating a Bitshares account, please visit <a href="bitshares.org" target="_blank">Bitshares.org</a>'),
+  );
+  $form[$crypto_group]['socialloginandsocialshare_bitshareslogin_enabled'] = array(
+    '#type' => 'radios',
+    '#title' => t('Do you want to allow users to login using Bitshares Login?'),
+    '#default_value' => variable_get('socialloginandsocialshare_bitshareslogin_enabled', 1),
+    '#options' => array(
+      1 => t('Yes, I want to allow users to be able to login using Bitshares Login'),
+      0 => t('No, I want my users to be able to login using Bitshares Login'),
+    ),
   );
   //loginradius api section
   $setup_group = 'setup';

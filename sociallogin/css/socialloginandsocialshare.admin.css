@@ -83,22 +83,7 @@ div#lr_tabs li a.active, div#lr_tabs li a:hover {
 
 }
 
-.form-item.form-type-radio.form-item-socialloginandsocialshare-attach-login-form,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-loginpage-position,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-registerpage-position,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-enable-horizontal-share,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-enable-vertical-share,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-interface-size,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-update-profile,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-commenting-enable,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-interface-size,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-enable-user-registration,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-send-user-credentials,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-same-window-enable,
-.form-item.form-type-radio.form-item-socialloginandsocialshare-debug-mode {
-    display: inline;
-    margin-right: 17px;
-}
+
 
 div#socialshare_vetical_show_providers_list > div > input, div#socialcounter_vertical_show_providers_list > div > input, div#socialcounter_show_providers_list > div > input, div#socialshare_providers_list > div > input {
     margin-right: 10px;
