@@ -1,3 +1,8 @@
+.btn:active, .btn.active {
+    background-image: none;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125) inset;
+    outline: 0 none;
+}
 .btn-social.btn-lg {
 padding-left: 35px !important;
 }
