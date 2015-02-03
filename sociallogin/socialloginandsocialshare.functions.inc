@@ -14,12 +14,11 @@
  *   A keyed array containing the current state of the form.
  */
 function socialloginandsocialshare_user_login_form_alter(&$form) {
-  $bitsharesenabled = variable_get('socialloginandsocialshare_bitshareslogin_enabled');
   $api_key = trim(variable_get('socialloginandsocialshare_apikey'));
   $secret = trim(variable_get('socialloginandsocialshare_apisecret'));
   $iconpos = variable_get('socialloginandsocialshare_showicon_location', 0) ? 102 : -102;
-	
-  if ($bitsharesenabled != 1 && !empty($api_key) && !empty($secret) && (!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i', $api_key) || !preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i', $secret))) {
+
+  if (!empty($api_key) && !empty($secret) && (!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i', $api_key) || !preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i', $secret))) {
     $form['socialloginandsocialshare_links'] = array(
       '#type' => 'item',
       '#title' => t('<div class="interface_error">Your LoginRadius API key or secret is not valid, please correct it or contact LoginRadius support at <a href="@this" target="_blank">www.LoginRadius.com</a></div>', array('@this' => 'http://www.Loginradius.com/')),
@@ -27,7 +26,7 @@ function socialloginandsocialshare_user_login_form_alter(&$form) {
       '#weight' => $iconpos,
     );
   }
-  elseif ((!empty($api_key) && !empty($secret)) || $bitsharesenabled == 1) {
+  elseif (!empty($api_key) && !empty($secret)) {
     //  $label_string = variable_get('socialloginandsocialshare_label_string');
     $form['socialloginandsocialshare_links'] = array(
       '#type' => 'item',

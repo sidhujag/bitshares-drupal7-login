@@ -1,12 +1,11 @@
 name = Social Login 
-description = Social Login module - adds social login on a Drupal site (Now with blockchain technology feature)!
+description = Social Login module - adds social login on a Drupal site!
 dependencies[] = socialloginandsocialshare_share
 package = LoginRadius Unified Social API
 core = 7.x
 files[] = socialloginandsocialshare.loginradius.inc
 files[] = socialloginandsocialshare.field.inc
 stylesheets[all][] = css/socialloginandsocialshare.css
-stylesheets[all][] = css/crypto.css
 configure = admin/config/people/socialloginandsocialshare
 
 version = "7.x-4.7"

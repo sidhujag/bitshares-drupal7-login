@@ -13,11 +13,13 @@ module_load_include('inc', 'socialloginandsocialshare', 'socialloginandsocialsha
  *
  * Manage identities for the specified user.
  */
-function socialloginandsocialshare_user_identities_submit($form, $account, $userprofile) {
+function socialloginandsocialshare_user_identities_submit($form, $account, $token) {
+  $obj = new LoginRadius();
   $user_title = format_username($account);
   drupal_set_title(check_plain($user_title));
 
-  if (user_is_logged_in() && $userprofile != '') {
+  if (user_is_logged_in() && $obj->loginradius_is_valid_guid($token)) {
+    $userprofile = $obj->loginradius_get_user_profiledata($token);
 
     if (isset($userprofile->ID) && $userprofile->ID != '' && user_is_logged_in()) {
       $lrdata = socialloginandsocialshare_getuser_data($userprofile);

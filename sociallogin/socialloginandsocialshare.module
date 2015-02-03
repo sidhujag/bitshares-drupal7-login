@@ -71,16 +71,8 @@ function socialloginandsocialshare_menu() {
     'page arguments' => array('socialloginandsocialshare_user_register_validate'),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'weight' => 5,
-    'file' => 'socialloginandsocialshare.bitsharesloginapi.inc',
   );
-  $items['socialloginandsocialshare/bitshareslogin_handler'] = array(
-    'page callback' => 'socialloginandsocialshare_bitshares_login',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'weight' => 6,
-    'file' => 'socialloginandsocialshare.bitsharesloginapi.inc',
-  );
+
   return $items;
 }
 
@@ -294,9 +286,8 @@ function socialloginandsocialshare_help($path) {
       $loginradius_link = l(t('LoginRadius'), 'http://ish.re/4', array('attributes' => array('target' => '_blank')));
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('This social login module is developed by LoginRadius. Social Login module enables social login on a Drupal website letting users log in through their existing Crypto-Currency wallet such as Bitshares or online IDs such as Facebook, Twitter, Google, Yahoo and over 25 more!. Please visit the !loginradius.', array('!loginradius' => $loginradius_link)) . '</p>';
+      $output .= '<p>' . t('This social login module is developed by LoginRadius which is a Software As A Service (SaaS).Social Login module enables social login on a Drupal website letting users log in through their existing IDs such as Facebook, Twitter, Google, Yahoo and over 25 more!. Please visit the !loginradius.', array('!loginradius' => $loginradius_link)) . '</p>';
       $header_items = array(
-		t('Secure Single-Sign-On authentication via blockchain technology'),
         t('Social login'),
         t('User profile data'),
         t('Social analytics'),
@@ -305,9 +296,6 @@ function socialloginandsocialshare_help($path) {
       );
       $output .= theme('item_list', array('items' => $header_items, 'title' => t('Use')));
       $items = array(
-		l(t('How to setup Bitshares Login'), 'https://github.com/sidhujag/bitshareslogin-drupal7/', array('attributes' => array('target' => '_blank'))),
-        l(t('Bitshares Login demo'), 'http://faucet.bitshares.org/', array('attributes' => array('target' => '_blank'))),
-        l(t('Logging in via a Crypto-Currency wallet(blog)'), 'http://bytemaster.bitshares.org/article/2014/12/22/BitShares-Login/', array('attributes' => array('target' => '_blank'))),
         l(t('Drupal live demo'), 'http://drupaldemo.loginradius.com/', array('attributes' => array('target' => '_blank'))),
         l(t('Drupal Module Documentation'), 'http://ish.re/AEGE', array('attributes' => array('target' => '_blank'))),
         l(t('LoginRadius'), 'http://ish.re/4', array('attributes' => array('target' => '_blank'))),
@@ -467,37 +455,7 @@ function socialloginandsocialshare_block_view($delta) {
   
   return $block;
 }
-function socialloginandsocialshare_bitshares_login(){
 
-	if(isset($_REQUEST['callback']))
-	{
-		
-		$response = '';
-		$callbackURL = $_REQUEST['callback'];
-		try {
-			$btsclient = new Bitshares();
-
-			$btsurl = $btsclient->createAuthUrl($callbackURL);
-			if($btsurl === false)
-			{
-				global $g_authurl_error;
-				$response['error']=  $g_authurl_error;
-				echo json_encode($response);
-				die();
-			}
-			$response['url'] = $btsurl;
-			
-
-		}	
-		catch (Exception $e){
-
-				$response['error']=  $e->getMessage();
-		}
-		drupal_json_output($response);
-		exit();
-  }
-  die();   
-}
 /**
  * @param $form
  * @param $form_state
@@ -506,7 +464,8 @@ function socialloginandsocialshare_bitshares_login(){
  * Function that process login functionality.
  */
 function socialloginandsocialshare_user_register_validate($form, &$form_state) {
-  global $user; 
+  global $user;
+  
   if (!user_is_logged_in()) {
     if (isset($_SESSION['current_social_provider'])) {
       unset($_SESSION['current_social_provider']);
@@ -555,33 +514,14 @@ function socialloginandsocialshare_user_register_validate($form, &$form_state) {
       drupal_goto();
     }
 
-    if (!isset($_POST['token']) && !isset($_REQUEST['client_key'])) {
+    if (!isset($_POST['token'])) {
       return;
     }
-    $userprofile = '';
-    if(isset($_REQUEST['client_key']))
-    {
-		$btsclient = new Bitshares();	
-		try
-		{	
-			$btsclient->authenticate();
-			$userprofile = $btsclient->userinfo_get();
-        }
-		catch (Exception $e){
-
-			$userprofile = '';
-		}        
-        	        
-        	
-    }
-    else if(isset($_POST['token']))
-    {
-		$obj = new LoginRadius();
-		$userprofile = $obj->loginradius_get_user_profiledata($_POST['token']);
-        
-    }
-
-    if ($userprofile != '' && isset($userprofile->ID) && $userprofile->ID != '' && !user_is_logged_in()) {
+    
+    $obj = new LoginRadius();
+    $userprofile = $obj->loginradius_get_user_profiledata($_POST['token']);
+    
+    if (isset($userprofile->ID) && $userprofile->ID != '' && !user_is_logged_in()) {
       $lrdata = socialloginandsocialshare_getuser_data($userprofile);
       variable_set('user_verify', 0);
       socialloginandsocialshare_check_existing_user($lrdata, $form, $form_state);
@@ -606,30 +546,7 @@ function socialloginandsocialshare_user_register_validate($form, &$form_state) {
       socialloginandsocialshare_show_error_message($userprofile);
     }
   }
-  elseif (isset($_POST['token']) || isset($_REQUEST['client_key'])) {
-    $userprofile = '';
-    if(isset($_REQUEST['client_key']))
-    {
-		$btsclient = new Bitshares();
-		try{		
-			$btsclient->authenticate();
-			$userprofile = $btsclient->userinfo_get();
-        }
-		catch (Exception $e){
-
-			$userprofile = '';
-		}        
-        	
-    }
-    else if(isset($_POST['token']))
-    {
-		$obj = new LoginRadius();
-		if($obj->loginradius_is_valid_guid($_POST['token']))
-		{
-			$userprofile = $obj->loginradius_get_user_profiledata($_POST['token']);
-		}	
-        
-    }  
-    socialloginandsocialshare_user_identities_submit($form, $user, $userprofile);
+  elseif (isset($_POST['token'])) {
+    socialloginandsocialshare_user_identities_submit($form, $user, $_POST['token']);
   }
 }

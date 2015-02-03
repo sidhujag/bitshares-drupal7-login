@@ -41,7 +41,7 @@ function socialloginandsocialshare_settings_bulid() {
   $profile_field_value = str_replace(array('{', '}'), array('[', ']'), drupal_json_encode($profile_field));
   $string .= '|' . $user_field_value . '|' . $profile_field_value;
   $string .= '|' . variable_get('socialloginandsocialshare_debug_mode', 0);
-  $string .= '|' . variable_get('socialloginandsocialshare_bitshareslogin_enabled', 1);
+  
   return $string;
 }
 
